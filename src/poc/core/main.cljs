@@ -37,7 +37,6 @@
 (defrouter MainRouter [_this _props]
   {:router-targets [LoginForm Home]})
 
-
 (def main-router (factory MainRouter))
 
 
@@ -60,15 +59,15 @@
         ready? (not= :state/initial session-state)]
     (when ready?
       (comp/fragment
+        (div
+          (div {:classes [toolbar]}
+            (current-user session-data))
+          (main-router router))
         (inj/style-element {:component Root
                             ;; Ensure that CSS is refreshed in dev, but not prod
                             :react-key (when goog.DEBUG (str (random-uuid)))
                             ;; Ensure that CSS is readable in dev, but minified in prod
-                            :garden-flags {:pretty-print? goog.DEBUG}})
-        (div
-          (div {:classes [toolbar]}
-            (current-user session-data))
-          (main-router router))))))
+                            :garden-flags {:pretty-print? goog.DEBUG}})))))
 
 
 ;; Entry point

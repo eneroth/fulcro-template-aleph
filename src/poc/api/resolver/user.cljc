@@ -42,22 +42,32 @@
 
 ;; User resolvers
 ;; ##################################
+(def session-user-return-fields
+  ;; Declares the fields to select from the user database when
+  ;; returning information to the frontend. Essentially a screening
+  ;; list to ensure that passwords etc. are not returned.
+  [:user/id
+   :contact/email
+   :person/given-names
+   :person/surname])
+
+
+(def nil-user
+  ;; Used to return an empty user if login fails.
+  (reduce #(assoc %1 %2 nil) {} session-user-return-fields))
+
+
 #?(:clj
-   (def session-user-return-fields
-     [:user/id
-      :contact/email
-      :person/given-names
-      :person/surname]))
-
-
-
-#?(:clj
-   (defn id->user [id]
+   (defn id->user
+     "Given an ID, return a user map."
+     [id]
      (select-keys (get users id) session-user-return-fields)))
 
 
 #?(:clj
-   (defn email->user [email]
+   (defn email->user
+     "Given an email, return a user map."
+     [email]
      (let [subject (first (filter #(= email (:contact/email %)) (vals users)))]
        (select-keys subject session-user-return-fields))))
 
@@ -71,16 +81,15 @@
 
 #?(:clj
    (defresolver current-user-resolver [env _]
-     {::pc/output [{:session/current-user (conj session-user-return-fields :user/valid?)}]}
+     {::pc/output [{:session/current-user session-user-return-fields}]}
      (let [{:user/keys [id] :as session} (get-in env [:request :session])]
-       (info (str "Finding user by ID " id))
+       (if id
+         (info (str "Found current user with ID " id))
+         (info "No current user found"))
        {:session/current-user
         (if id
-          (merge (select-keys session session-user-return-fields)
-                 {:user/valid? true})
-          {:user/id nil
-           :contact/email nil
-           :user/valid? false})})))
+          (select-keys session session-user-return-fields)
+          nil-user)})))
 
 
 ;; Login mutations
@@ -90,30 +99,28 @@
                             :user/keys [password]}]
      {::pc/params #{:contact/email
                     :contact/password}
-      ::pc/output (conj session-user-return-fields :user/valid?)}
+      ::pc/output session-user-return-fields}
      (let [subject         (email->user email)
            stored-password (:user/password (get users (:user/id subject)))]
        (info (str "Logging in user " email))
        (Thread/sleep 500)
        (if (and subject (= password stored-password))
          (fulcro-server/augment-response
-           (merge subject
-                  {:user/valid? true})
+           subject
            (fn [ring-resp]
              (update ring-resp :session merge subject)))
-         {:user/valid? false}))))
+         nil-user))))
 
 
 ;; Logout mutations
 ;; ##################################
 #?(:clj
    (defmutation logout [env _args]
-     {::pc/output [:user/id :user/valid?]}
+     {::pc/output [:user/id]}
      (let [{:contact/keys [email]} (get-in env [:request :session])]
        (info (str "Logging out user " email))
        (fulcro-server/augment-response
-         {:user/id nil
-          :user/valid? false}
+         {:user/id nil}
          (fn [ring-resp]
            (assoc ring-resp :session {}))))))
 
@@ -145,24 +152,8 @@
      (router/route-to! "/login")
      (-> env
          (uism/trigger-remote-mutation :actor/login-form `logout {})
-         (uism/apply-action assoc-in [:poc.component.current-user/session :current-user] {:user/id nil :user/valid? false})
-         (uism/activate :state/idle))))
-
-
-#?(:cljs
-   (def session-result-events
-     {:event/ok
-      {::uism/target-states #{:state/idle}
-       ::uism/handler (fn [env]
-                        (let [logged-in? (uism/alias-value env :logged-in?)]
-                          (if logged-in?
-                            (router/route-to! "/home")
-                            (router/route-to! "/login"))
-                          (-> env
-                              (uism/activate :state/idle)
-                              (uism/assoc-aliased :bad-credentials? (not logged-in?)))))}
-      :event/error
-      {::uism/target-states #{:state/server-failed}}}))
+         (uism/apply-action assoc-in [:poc.component.current-user/session :current-user] {:user/id nil})
+         (uism/activate :state/logged-out))))
 
 
 #?(:cljs
@@ -171,7 +162,7 @@
       ::uism/actor-name #{:actor/user
                           :actor/login-form}
 
-      ::uism/aliases {:logged-in?       [:actor/user :user/valid?]
+      ::uism/aliases {:logged-in?       [:actor/user :user/id]
                       :bad-credentials? [:actor/login-form :ui/bad-credentials]}
 
       ::uism/states
@@ -191,34 +182,43 @@
        :state/checking-existing-session
        {::uism/events
         {:event/ok
-         {::uism/target-states #{:state/idle}
+         {::uism/target-states #{:state/logged-in
+                                 :state/logged-out}
           ::uism/handler (fn [env]
                            (let [logged-in? (uism/alias-value env :logged-in?)]
                              (router/route-to! (if logged-in? "/home" "/login"))
-                             (uism/activate env :state/idle)))}
+                             (if logged-in?
+                               (uism/activate env :state/logged-in)
+                               (uism/activate env :state/logged-out))))}
          :event/error
          {::uism/target-states #{:state/server-failed}}}}
 
 
 
        ;; ------------------------------------------------------------------------
-       :state/idle
-       {::uism/events {:event/login  {::uism/target-states #{:state/checking-credentials}
-                                      ::uism/handler handle-login}
-                       :event/logout {::uism/target-states #{:state/idle}
+       :state/logged-in
+       {::uism/events {:event/logout {::uism/target-states #{:state/logged-out}
                                       ::uism/handler handle-logout}}}
+
+       ;; ------------------------------------------------------------------------
+       :state/logged-out
+       {::uism/events {:event/login  {::uism/target-states #{:state/checking-credentials}
+                                      ::uism/handler handle-login}}}
 
        ;; ------------------------------------------------------------------------
        :state/checking-credentials
        {::uism/events
         {:event/ok
-         {::uism/target-states #{:state/idle}
+         {::uism/target-states #{:state/logged-in
+                                 :state/logged-out}
           ::uism/handler (fn [env]
                            (let [logged-in? (uism/alias-value env :logged-in?)]
                              (router/route-to! (if logged-in? "/home" "/login"))
-                             (-> env
-                                 (uism/activate :state/idle)
-                                 (uism/assoc-aliased :bad-credentials? (not logged-in?)))))}
+                             (if logged-in?
+                               (uism/activate env :state/logged-in)
+                               (-> env
+                                   (uism/activate :state/logged-out)
+                                   (uism/assoc-aliased :bad-credentials? true)))))}
          :event/error
          {::uism/target-states #{:state/server-failed}}}}
 

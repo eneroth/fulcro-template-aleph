@@ -7,24 +7,22 @@
 
 
 (defsc CurrentUser
-  [this {:user/keys [id valid?]
+  [this {:user/keys [id]
          :contact/keys [email]
          :person/keys [given-names surname]
          :as props}]
   {:ident (fn [] [::session :current-user])
    :query [:user/id
            :contact/email
-           :user/valid?
            :person/given-names
            :person/surname]
-   :initial-state {:user/id nil
-                   :user/valid? false}
+   :initial-state {:user/id nil}
    :css [[:.user-widget {:display "flex"
                          :margin "12px"
                          :flex-direction "row"}]
          [:.login-logout-button {:margin-left "6px"}]]}
   (div :.user-widget
-    (when valid?
+    (when id
       (div
         (str given-names " " surname)
         (a :.login-logout-button
