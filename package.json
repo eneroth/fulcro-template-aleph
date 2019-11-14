@@ -1,0 +1,19 @@
+{
+  "name": "poc",
+  "version": "0.1.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "clean": "./clean.sh",
+    "ancient": "clojure -Sdeps '{:deps {olical/depot {:mvn/version \"1.8.4\"}}}' -m depot.outdated.main",
+    "ancient:upgrade": "clojure -Sdeps '{:deps {olical/depot {:mvn/version \"1.8.4\"}}}' -m depot.outdated.main --update",
+    "dev": "clojure -Adev",
+    "prod": "clojure -Aprod;",
+    "lint": "clj-kondo --lint src"
+  },
+  "dependencies": {
+    "react": "^16.10.1",
+    "react-dom": "^16.10.1",
+    "shadow-cljs": "^2.8.65"
+  }
+}
