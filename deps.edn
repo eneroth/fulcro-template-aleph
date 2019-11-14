@@ -1,7 +1,7 @@
 {:paths ["src" "resources" "startup"]
  :deps {;; Core
         org.clojure/clojure               {:mvn/version "1.10.1"}
-        org.clojure/core.async            {:mvn/version "0.4.500"}
+        org.clojure/core.async            {:mvn/version "0.5.527"}
         org.clojure/clojurescript         {:mvn/version "1.10.520"}
 
         ;; Build
@@ -12,7 +12,7 @@
 
         ;; Route & serve
         aleph                             {:mvn/version "0.4.7-alpha4"}
-        ring/ring-core                    {:mvn/version "1.7.1"}
+        ring/ring-core                    {:mvn/version "1.8.0"}
         ring/ring-codec                   {:mvn/version "1.1.2"}
         metosin/reitit-core               {:mvn/version "0.3.10"}
         metosin/reitit-ring               {:mvn/version "0.3.10"}
