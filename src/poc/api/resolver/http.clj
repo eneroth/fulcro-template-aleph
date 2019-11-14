@@ -1,8 +1,5 @@
 (ns poc.api.resolver.http
-  (:require ;; Helpers
-            [poc.util.helpers :as helpers]
-
-            ;; HTTP
+  (:require ;; HTTP
             [aleph.http :as http]
             [manifold.deferred :as d]
 
@@ -21,22 +18,17 @@
                     (slurp (:body result))))})
 
 
-(defresolver get-html [env input]
+(defresolver get-html [_env input]
   {::pc/input #{:string/url}
    ::pc/output [:string/html]
    ::pc/batch? true}
   (if (sequential? input)
-    (do
-      ;(println "Fetching multiple…")
-      ;(clojure.pprint/pprint input)
-      (->> input
-           (map :string/url)
-           (map http-get)
-           (pmap format-http-get-result)
-           vec))
-    (do
-      ;(println "Fetching single" input "…")
-      (format-http-get-result (http-get (:string/url input))))))
+    (->> input
+         (map :string/url)
+         (map http-get)
+         (pmap format-http-get-result)
+         vec)
+    (format-http-get-result (http-get (:string/url input)))))
 
 
 (def resolvers [get-html])

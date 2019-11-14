@@ -1,20 +1,13 @@
 (ns poc.api.parser
   (:require ;; Core
-            [clojure.string :as string]
             [clojure.core.async :refer [<!!]]
 
             ;; Resolvers
             [poc.session.resolvers :as session]
 
-            ;; Util
-            [taoensso.timbre :as log]
-
             ;; Pathom
             [com.wsscode.pathom.core :as p]
-            [com.wsscode.pathom.connect :as pc :refer [defresolver]]
-            [com.wsscode.pathom.connect.graphql2 :as pcg]
-            [com.wsscode.pathom.graphql :as pg]
-            [com.wsscode.pathom.connect.graphql :as gql]
+            [com.wsscode.pathom.connect :as pc]
             [com.wsscode.pathom.diplomat.http :as p.http]
 
             ;; Web

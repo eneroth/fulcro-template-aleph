@@ -49,13 +49,11 @@
   "Given a component 'this', creates an :<ident>/focus key, which is set to true."
   [this]
   (let [focus-key   (this->focus-key this)
-        timeout-key (this->timeout-key this)]
-    ;(println "Focusing" (comp/get-ident this))
-    (let [timeout (or (maybe-create-timeout this)
-                      (get (comp/get-state this) timeout-key))
-          current-timeout @timeout]
-      (maybe-clear-timeout timeout)
-      (comp/update-state! this assoc focus-key true))))
+        timeout-key (this->timeout-key this)
+        timeout (or (maybe-create-timeout this)
+                    (get (comp/get-state this) timeout-key))]
+    (maybe-clear-timeout timeout)
+    (comp/update-state! this assoc focus-key true)))
 
 
 (defn blur
@@ -64,12 +62,10 @@
    unfocus event."
   [this]
   (let [focus-key   (this->focus-key this)
-        timeout-key (this->timeout-key this)]
-    ;(println "Unfocusing" (comp/get-ident this))
-    (let [timeout (or (maybe-create-timeout this)
-                      (get (comp/get-state this) timeout-key))
-          current-timeout @timeout]
-      (maybe-clear-timeout timeout)
-      (reset! timeout
-        (.setTimeout js/window
-         #(comp/update-state! this assoc focus-key false))))))
+        timeout-key (this->timeout-key this)
+        timeout (or (maybe-create-timeout this)
+                    (get (comp/get-state this) timeout-key))]
+    (maybe-clear-timeout timeout)
+    (reset! timeout
+      (.setTimeout js/window
+       #(comp/update-state! this assoc focus-key false)))))

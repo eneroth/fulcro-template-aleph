@@ -1,7 +1,5 @@
 (ns poc.core.main
-  (:require ;; Util
-
-            ;; Components
+  (:require ;; Components
             [poc.session.user :as user]
             [poc.component.login-form :refer [LoginForm]]
             [poc.component.current-user :refer [CurrentUser current-user]]
@@ -15,11 +13,8 @@
             [com.fulcrologic.fulcro-css.css :as css]
             [com.fulcrologic.fulcro.ui-state-machines :as uism]
             [com.fulcrologic.fulcro.routing.dynamic-routing :as dr :refer [defrouter]]
-            [com.fulcrologic.fulcro.data-fetch :as df :refer [load!]]
-            [com.fulcrologic.fulcro.algorithms.merge :as merge]
             [com.fulcrologic.fulcro.components :as comp
              :refer [defsc get-query get-initial-state factory]]
-            [com.fulcrologic.fulcro.mutations :refer [defmutation]]
             [com.fulcrologic.fulcro-css.localized-dom :as dom :refer [div]]))
 
 
@@ -47,14 +42,13 @@
   {:query [{:root/router (get-query MainRouter)}
            {:session/current-user (get-query CurrentUser)}
            [::uism/asm-id ::user/session]]
-   :initial-state
-   (fn [params]
-     {:root/router (get-initial-state MainRouter)})
+   :initial-state (fn [_]
+                    {:root/router (get-initial-state MainRouter)})
    :css [[:.toolbar {:display "flex"
                      :align-items "flex-end"
                      :flex-direction "column"
                      :background-color "#f7f8fb"}]]}
-  (let [{:keys [app toolbar]} (css/get-classnames Root)
+  (let [{:keys [toolbar]} (css/get-classnames Root)
         session-state (uism/get-active-state this ::user/session)
         ready? (not= :state/initial session-state)]
     (when ready?

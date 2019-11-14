@@ -1,9 +1,8 @@
 (ns poc.session.user
-  (:require [poc.session.model :as model]
+  (:require [poc.session.db :as db]
             [taoensso.timbre :as timbre :refer [spy info]]
             [poc.core.router :as router]
-            [com.fulcrologic.fulcro.ui-state-machines :as uism :refer [defstatemachine]]
-            [com.fulcrologic.fulcro.mutations :as m :refer [defmutation]]))
+            [com.fulcrologic.fulcro.ui-state-machines :as uism :refer [defstatemachine]]))
 
 
 (defn handle-login [{::uism/keys [event-data] :as env}]
@@ -25,7 +24,7 @@
   (router/route-to! "/login")
   (-> env
       (uism/trigger-remote-mutation :actor/login-form `poc.session.resolvers/logout {})
-      (uism/apply-action assoc-in [:poc.component.current-user/session :current-user] model/nil-user)
+      (uism/apply-action assoc-in [:poc.component.current-user/session :current-user] db/nil-user)
       (uism/activate :state/logged-out)))
 
 
@@ -75,7 +74,9 @@
                         (let [logged-in? (uism/alias-value env :logged-in?)]
                           (router/route-to! (if logged-in? "/home" "/login"))
                           (if logged-in?
-                            (uism/activate env :state/logged-in)
+                            (-> env
+                                (uism/activate :state/logged-in)
+                                (uism/assoc-aliased :bad-credentials? false))
                             (-> env
                                 (uism/activate :state/logged-out)
                                 (uism/assoc-aliased :bad-credentials? true)))))}

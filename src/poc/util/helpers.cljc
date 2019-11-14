@@ -1,9 +1,6 @@
 (ns poc.util.helpers
   (:require
    [clojure.string :as string]
-   [clojure.set :refer [superset?]]
-   #?(:clj [clojure.pprint :refer [pprint]])
-   #?(:cljs [cljs.pprint :refer [pprint]])
    #?(:cljs [goog.dom :refer [getElement]])
    #?(:cljs [goog.dom.Range :refer [createCaret]])))
 
@@ -32,16 +29,6 @@
       8 (str (round (/ a-count 1000000) 0) "m")
       9 (str (round (/ a-count 1000000) 0) "m")
      10 (str (round (/ a-count 1000000000) 1) "B"))))
-
-
-(def article-type-conversion-table
-  {"journal-article" "Article"})
-
-(defn article-type->title [value]
-  (get article-type-conversion-table value
-       (-> value
-           (string/replace #"-" " ")
-           (string/capitalize))))
 
 
 (defn deep-merge

@@ -1,7 +1,6 @@
 (ns poc.component.page-404
-  (:require [clojure.pprint :refer [pprint]]
-            [hiccup.page :refer [include-css]]
-            [poc.component.index :refer [js-loc css-loc]]))
+  (:require [hiccup.page :refer [include-css]]
+            [poc.component.index :refer [css-loc]]))
 
 
 ;; Template

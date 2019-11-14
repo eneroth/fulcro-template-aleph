@@ -2,7 +2,6 @@
   (:require [aleph.http :as client]
             [clojure.core.async :as async]
             [clojure.spec.alpha :as s]
-            [com.wsscode.common.async-clj :refer [go-catch go-promise]]
             [com.wsscode.pathom.diplomat.http :as http]
             [com.wsscode.pathom.misc :as p.misc]))
 

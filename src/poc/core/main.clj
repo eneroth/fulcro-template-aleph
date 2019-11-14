@@ -19,6 +19,6 @@
 
 ;; Entry point
 ;; ##################################
-(defn -main [& args]
+(defn -main [_]
   (restart-server)
   (info "Ready to go!"))
