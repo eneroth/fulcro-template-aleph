@@ -120,7 +120,7 @@
      (let [{:contact/keys [email]} (get-in env [:request :session])]
        (info (str "Logging out user " email))
        (fulcro-server/augment-response
-         {:user/id nil}
+         nil-user
          (fn [ring-resp]
            (assoc ring-resp :session {}))))))
 
