@@ -18,3 +18,4 @@ test-*.edn
 *.*#
 *.#*
 *.rsls
+REBL*.jar

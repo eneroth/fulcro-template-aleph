@@ -5,9 +5,10 @@
   "license": "MIT",
   "scripts": {
     "clean": "./clean.sh",
-    "ancient": "clojure -Sdeps '{:deps {olical/depot {:mvn/version \"1.8.4\"}}}' -m depot.outdated.main",
-    "ancient:upgrade": "clojure -Sdeps '{:deps {olical/depot {:mvn/version \"1.8.4\"}}}' -m depot.outdated.main --update",
+    "outdated": "clojure -Aoutdated",
+    "outdated:upgrade": "clojure -Aoutdated --update",
     "dev": "clojure -Adev",
+    "dev:rebl": "clojure -A:dev:rebl-12",
     "prod": "clojure -Aprod;",
     "lint": "clj-kondo --lint src"
   },

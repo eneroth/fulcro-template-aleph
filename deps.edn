@@ -24,8 +24,67 @@
         clj-commons/pushy                 {:mvn/version "0.3.10"}
         hiccup                            {:mvn/version "1.0.5"}}
 
- :aliases {:prod {:main-opts ["-m" "prod"]}
+ :aliases {:prod
+           {:main-opts ["-m" "prod"]}
 
-           :dev {:main-opts ["-m" "dev"]
-                 :extra-deps {compliment {:mvn/version "0.3.9"}
-                              criterium  {:mvn/version "0.4.5"}}}}}
+           :dev
+           {:main-opts ["-m" "dev"]
+            :extra-deps {compliment {:mvn/version "0.3.9"}
+                         criterium  {:mvn/version "0.4.5"}}}
+
+           :outdated
+           {:extra-deps {olical/depot {:mvn/version "1.8.4"}}
+            :main-opts ["-m" "depot.outdated.main"]}
+
+           ;; - see https://github.com/cognitect-labs/REBL-distro
+           ;; - you need to download the REBL JAR (and update the local/root below)
+           ;; - you need to be using Clojure 1.10 and either
+           ;; - - Oracle JDK 8/Zulu OpenJDK 8 w/JavaFX -- use :rebl-8
+           ;; - - OpenJDK 11 -- use :rebl-12
+           ;; - - on Windows, use the -win versions of these aliases
+           ;; - - (assumes you have REBL as /Developer/REBL/latest/REBL.jar
+           ;; - - on macOS/Linux and C:\Developer\REBL\latest\REBL.jar on Windows)
+           :rebl-8
+           {:extra-deps {org.clojure/clojure    {:mvn/version "1.10.1"}
+                         org.clojure/core.async {:mvn/version "0.5.527"}
+                         com.cognitect/rebl
+                         ;; adjust to match your install location
+                         {:local/root "REBL-0.9.220.jar"}}
+            :main-opts ["-m" "cognitect.rebl"]}
+
+           :rebl-12
+           {:extra-deps {org.clojure/clojure         {:mvn/version "1.10.1"}
+                         org.clojure/core.async      {:mvn/version "0.5.527"}
+                         com.cognitect/rebl
+                         ;; adjust to match your install location
+                         {:local/root "REBL-0.9.220.jar"}
+                         org.openjfx/javafx-fxml     {:mvn/version "13.0.1"}
+                         org.openjfx/javafx-controls {:mvn/version "13.0.1"}
+                         org.openjfx/javafx-graphics {:mvn/version "13.0.1"}
+                         org.openjfx/javafx-media    {:mvn/version "13.0.1"}
+                         org.openjfx/javafx-swing    {:mvn/version "13.0.1"}
+                         org.openjfx/javafx-base     {:mvn/version "13.0.1"}
+                         org.openjfx/javafx-web      {:mvn/version "13.0.1"}}
+            :main-opts ["-m" "cognitect.rebl"]}
+
+           ;; start the Liquid Clojure editor
+           ;; - see https://github.com/mogenslund/liquid
+           :liquid
+           {:extra-deps {mogenslund/liquid {:mvn/version "RELEASE"}}
+            :main-opts ["-m" "dk.salza.liq.core"]}
+
+
+           ;; uberjar building:
+           ;; - see https://github.com/seancorfield/depstar for a minimalist approach:
+           ;;   - clj -A:uberjar result.jar
+           ;; - to run it:
+           ;;   - java -cp result.jar clojure.main -m mymain.namespace
+           ;; - build a library JAR:
+           ;;   - clj -A:jar result-lib.jar
+           :uberjar
+           {:extra-deps {seancorfield/depstar {:mvn/version "RELEASE"}}
+            :main-opts ["-m" "hf.depstar.uberjar"]}
+
+           :jar
+           {:extra-deps {seancorfield/depstar {:mvn/version "RELEASE"}}
+            :main-opts ["-m" "hf.depstar.jar"]}}}
