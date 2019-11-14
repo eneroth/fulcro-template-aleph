@@ -12,14 +12,14 @@
     :as props}]
   {:ident (fn [] [:component/id :login])
    :query [:ui/email :ui/password :ui/bad-credentials
-           [::uism/asm-id :poc.resolvers.user/session]]
+           [::uism/asm-id :poc.session.user/session]]
    :route-segment ["login"]
    :initial-state {:ui/email    "foo@bar.com"
                    :ui/bad-credentials false
                    :ui/password "letmein"}
    :css [[:.login-form {:margin "12px"}]]}
   (let [{:keys [login-form]} (css/get-classnames LoginForm)
-        session-state (uism/get-active-state this :poc.api.resolver.user/session)
+        session-state (uism/get-active-state this :poc.session.user/session)
         busy?  (= session-state :state/checking-credentials)
         error? (= session-state :state/server-failed)]
     (div {:classes [login-form]}
@@ -36,8 +36,8 @@
         (input {:value password
                 :disabled busy?
                 :onChange #(set-string! this :ui/password :event %)})
-        (button {:onClick #(uism/trigger! this :poc.api.resolver.user/session :event/login {:contact/email email
-                                                                                            :user/password password})}
+        (button {:onClick #(uism/trigger! this :poc.session.user/session :event/login {:contact/email email
+                                                                                       :user/password password})}
           "Login")))))
 
 

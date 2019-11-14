@@ -4,7 +4,7 @@
             [clojure.core.async :refer [<!!]]
 
             ;; Resolvers
-            [poc.api.resolver.user :as user]
+            [poc.session.resolvers :as session]
 
             ;; Util
             [taoensso.timbre :as log]
@@ -31,7 +31,7 @@
    (get env ::pc/indexes)})
 
 
-(def resolvers [user/resolvers
+(def resolvers [session/resolvers
                 index-explorer])
 
 

@@ -27,7 +27,7 @@
         (str given-names " " surname)
         (a :.login-logout-button
            {:href "/login"
-            :onClick #(uism/trigger! this :poc.api.resolver.user/session :event/logout)}
+            :onClick #(uism/trigger! this :poc.session.user/session :event/logout)}
            "Logout")))))
 
 (def current-user (comp/factory CurrentUser))

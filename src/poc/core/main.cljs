@@ -2,7 +2,7 @@
   (:require ;; Util
 
             ;; Components
-            [poc.api.resolver.user :as user]
+            [poc.session.user :as user]
             [poc.component.login-form :refer [LoginForm]]
             [poc.component.current-user :refer [CurrentUser current-user]]
             [poc.component.app :as app]
