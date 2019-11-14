@@ -8,7 +8,7 @@
     "outdated": "clojure -Aoutdated",
     "outdated:upgrade": "clojure -Aoutdated --update",
     "dev": "clojure -Adev",
-    "dev:rebl": "clojure -A:dev:rebl-12",
+    "dev:rebl": "clojure -A:rebl-11:dev",
     "prod": "clojure -Aprod;",
     "lint": "clj-kondo --lint src"
   },

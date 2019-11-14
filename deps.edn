@@ -52,7 +52,7 @@
                          {:local/root "REBL-0.9.220.jar"}}
             :main-opts ["-m" "cognitect.rebl"]}
 
-           :rebl-12
+           :rebl-11
            {:extra-deps {org.clojure/clojure         {:mvn/version "1.10.1"}
                          org.clojure/core.async      {:mvn/version "0.5.527"}
                          com.cognitect/rebl
