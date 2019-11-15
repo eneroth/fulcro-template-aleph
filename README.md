@@ -8,7 +8,7 @@ Based on Aleph as server and Reitit for routing. Includes an example of a UI sta
 
 ### MacOS
 - Get [`Homebrew`](https://brew.sh/)
-- Install a JVM runtime, for example `brew install openjdk@12`.
+- Install a JVM runtime, for example `brew tap AdoptOpenJDK/openjdk && brew cask install adoptopenjdk11`.
 - `brew install clojure`.
 - `brew install yarn`.
 
