@@ -5,9 +5,7 @@
 
 
 (defn start-server? [args-map]
-  (if (= "false" (get args-map "--start-server"))
-    false
-    true))
+  (not= "false" (get args-map "--start-server")))
 
 
 (defn -main [& args]

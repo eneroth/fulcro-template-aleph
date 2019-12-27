@@ -24,8 +24,9 @@
    (get env ::pc/indexes)})
 
 
-(def resolvers [session/resolvers
-                index-explorer])
+(def resolvers
+  [session/resolvers
+   index-explorer])
 
 
 (def pathom-parser
