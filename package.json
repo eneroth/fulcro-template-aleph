@@ -6,7 +6,7 @@
   "scripts": {
     "clean": "./clean.sh",
     "outdated": "clojure -Aoutdated",
-    "outdated:upgrade": "clojure -Aoutdated --update",
+    "outdated:update": "clojure -Aoutdated --update",
     "dev": "clojure -Adev",
     "dev:rebl": "clojure -A:rebl-11:dev",
     "prod": "clojure -Aprod;",
