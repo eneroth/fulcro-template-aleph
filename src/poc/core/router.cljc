@@ -22,7 +22,6 @@
 
    ;; Clojure
    #?(:clj [poc.api.parser :refer [api-parser]])
-   #?(:clj [hiccup.core :as hiccup])
    #?(:clj [reitit.ring :as reitit-ring])
    #?(:clj [com.fulcrologic.fulcro.server.api-middleware :as fulcro-server])
    #?(:clj [ring.middleware.resource :refer [wrap-resource]])
@@ -70,7 +69,7 @@
      [_]
      {:status 200
       :headers {"content-type" "text/html"}
-      :body (hiccup/html (index))}))
+      :body (index)}))
 
 
 ;; Routes
@@ -123,10 +122,9 @@
        (warn (str (:uri req) " requested, but not found."))
        {:status  404
         :headers {"Content-Type" "text/html"}
-        :body (hiccup/html
-                (page-404
-                 {:msg [:span "Sorry, " [:strong (:uri req)]
-                        " doesn't seem to be a valid path."]}))})))
+        :body (page-404
+               {:msg [:span "Sorry, " [:strong (:uri req)]
+                      " doesn't seem to be a valid path."]})})))
 
 
 (def router
