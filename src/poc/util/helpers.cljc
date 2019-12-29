@@ -8,7 +8,6 @@
 (defn re-namespace-key
   "Produces a new b-key, namespaced under the same namespace as a-key."
   [a-key b-key]
-  ;(println "Namespacing" b-key "with" a-key)
   (keyword (str (namespace a-key) "/" (name b-key))))
 
 

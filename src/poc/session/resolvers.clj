@@ -6,16 +6,22 @@
             [com.fulcrologic.fulcro.server.api-middleware :as fulcro-server]))
 
 
-
-
-
-(defresolver user-resolver [_env {:user/keys [id]}]
+(defresolver user-resolver
+  [_env {:user/keys [id]}]
   {::pc/input #{:user/id}
    ::pc/output db/user-return-fields}
   (db/id->user id))
 
 
-(defresolver current-user-resolver [env _]
+(defresolver fullname-resolver
+  [_env {:person/keys [given-names surname]}]
+  {::pc/input #{:person/given-names :person/surname}
+   ::pc/output [:person/fullname]}
+  {:person/fullname (str given-names " " surname)})
+
+
+(defresolver current-user-resolver
+  [env _]
   {::pc/output [{:session/current-user db/user-return-fields}]}
   (let [{:user/keys [id] :as session} (get-in env [:request :session])]
     (if id
@@ -27,8 +33,9 @@
        db/nil-user)}))
 
 
-(defmutation login [_env {:contact/keys [email]
-                          :user/keys [password]}]
+(defmutation login
+  [_env {:contact/keys [email]
+         :user/keys [password]}]
   {::pc/params #{:contact/email
                  :contact/password}
    ::pc/output db/user-return-fields}
@@ -44,9 +51,8 @@
       db/nil-user)))
 
 
-;; Logout mutations
-;; ##################################
-(defmutation logout [env _args]
+(defmutation logout
+  [env _args]
   {::pc/output [:user/id]}
   (let [{:contact/keys [email]} (get-in env [:request :session])]
     (info (str "Logging out user " email))
@@ -55,4 +61,5 @@
       (fn [ring-resp]
         (assoc ring-resp :session {})))))
 
-(def resolvers [user-resolver current-user-resolver login logout])
+
+(def resolvers [fullname-resolver user-resolver current-user-resolver login logout])
