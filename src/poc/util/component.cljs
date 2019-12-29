@@ -5,25 +5,25 @@
 
 ;; Focus handling for components
 ;; ##################################
-(def ident->focus-key
+(def ^:private ident->focus-key
   (memoize
    (fn [ident]
      (helpers/re-namespace-key ident :focus))))
 
-(defn- this->focus-key [this]
+(defn ^:private this->focus-key [this]
   (ident->focus-key (first (comp/get-ident this))))
 
 
-(def ident->timeout-key
+(def ^:private ident->timeout-key
   (memoize
    (fn [ident]
      (helpers/re-namespace-key ident :timeout))))
 
-(defn- this->timeout-key [this]
+(defn ^:private this->timeout-key [this]
   (ident->timeout-key (first (comp/get-ident this))))
 
 
-(defn- maybe-clear-timeout
+(defn ^:private maybe-clear-timeout
   "Given a timeout atom, cancels the timeout if the atom contains one."
   [timeout-atom]
   (when-let [current-timeout @timeout-atom]
@@ -32,7 +32,7 @@
     (reset! timeout-atom nil)))
 
 
-(defn- maybe-create-timeout
+(defn ^:private maybe-create-timeout
   "Given a component 'this', creates an atom under :<ident>/timeout,
    if it doesn't exist already."
   [this]

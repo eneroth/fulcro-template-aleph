@@ -5,6 +5,13 @@
    #?(:cljs [goog.dom.Range :refer [createCaret]])))
 
 
+(defn re-namespace-key
+  "Produces a new b-key, namespaced under the same namespace as a-key."
+  [a-key b-key]
+  ;(println "Namespacing" b-key "with" a-key)
+  (keyword (str (namespace a-key) "/" (name b-key))))
+
+
 (defn round [value decimals]
   (let [round-fn #?(:cljs js/Math.round :clj #(Math/round %))
         pow-fn   #?(:cljs js/Math.pow :clj #(Math/pow %1 %2))
