@@ -24,6 +24,8 @@
   [env _]
   {::pc/output [{:session/current-user db/user-return-fields}]}
   (let [{:user/keys [id] :as session} (get-in env [:request :session])]
+    (info "Session:")
+    (info session)
     (if id
       (info (str "Found current user with ID " id))
       (info "No current user found"))
@@ -37,17 +39,18 @@
   [_env {:contact/keys [email]
          :user/keys [password]}]
   {::pc/params #{:contact/email
-                 :contact/password}
+                 :user/password}
    ::pc/output db/user-return-fields}
   (let [subject         (db/email->user email)
         stored-password (:user/password (get db/users (:user/id subject)))]
     (info (str "Logging in user " email))
+    (info subject)
     (Thread/sleep 500)
     (if (and subject (= password stored-password))
       (fulcro-server/augment-response
         subject
         (fn [ring-resp]
-          (update ring-resp :session merge subject)))
+          (spy (update ring-resp :session merge subject))))
       db/nil-user)))
 
 
