@@ -1,11 +1,11 @@
 {:paths ["src" "resources" "startup"]
  :deps {;; Core
         org.clojure/clojure               {:mvn/version "1.10.1"}
-        org.clojure/core.async            {:mvn/version "1.0.567"}
+        org.clojure/core.async            {:mvn/version "1.1.587"}
         org.clojure/clojurescript         {:mvn/version "1.10.597"}
 
         ;; Build
-        thheller/shadow-cljs              {:mvn/version "2.8.93"}
+        thheller/shadow-cljs              {:mvn/version "2.8.99"}
 
         ;; Inspect
         com.taoensso/timbre               {:mvn/version "4.10.0"}
@@ -19,7 +19,7 @@
 
         ;; App
         com.fulcrologic/fulcro-garden-css {:mvn/version "3.0.7"}
-        com.fulcrologic/fulcro            {:mvn/version "3.1.20"}
+        com.fulcrologic/fulcro            {:mvn/version "3.2.3"}
         com.wsscode/pathom                {:mvn/version "2.2.31"}
         clj-commons/pushy                 {:mvn/version "0.3.10"}
         hiccup                            {:mvn/version "1.0.5"}}
@@ -46,7 +46,7 @@
            ;; - - on macOS/Linux and C:\Developer\REBL\latest\REBL.jar on Windows)
            :rebl-8
            {:extra-deps {org.clojure/clojure    {:mvn/version "1.10.1"}
-                         org.clojure/core.async {:mvn/version "1.0.567"}
+                         org.clojure/core.async {:mvn/version "1.1.587"}
                          com.cognitect/rebl
                          ;; adjust to match your install location
                          {:local/root "REBL-0.9.220.jar"}}
@@ -54,17 +54,17 @@
 
            :rebl-11
            {:extra-deps {org.clojure/clojure         {:mvn/version "1.10.1"}
-                         org.clojure/core.async      {:mvn/version "1.0.567"}
+                         org.clojure/core.async      {:mvn/version "1.1.587"}
                          com.cognitect/rebl
                          ;; adjust to match your install location
                          {:local/root "REBL-0.9.220.jar"}
-                         org.openjfx/javafx-fxml     {:mvn/version "14"}
-                         org.openjfx/javafx-controls {:mvn/version "14"}
-                         org.openjfx/javafx-graphics {:mvn/version "14"}
-                         org.openjfx/javafx-media    {:mvn/version "14"}
-                         org.openjfx/javafx-swing    {:mvn/version "14"}
-                         org.openjfx/javafx-base     {:mvn/version "14"}
-                         org.openjfx/javafx-web      {:mvn/version "14"}}
+                         org.openjfx/javafx-fxml     {:mvn/version "14.0.1"}
+                         org.openjfx/javafx-controls {:mvn/version "14.0.1"}
+                         org.openjfx/javafx-graphics {:mvn/version "14.0.1"}
+                         org.openjfx/javafx-media    {:mvn/version "14.0.1"}
+                         org.openjfx/javafx-swing    {:mvn/version "14.0.1"}
+                         org.openjfx/javafx-base     {:mvn/version "14.0.1"}
+                         org.openjfx/javafx-web      {:mvn/version "14.0.1"}}
             :main-opts ["-m" "cognitect.rebl"]}
 
            ;; start the Liquid Clojure editor
